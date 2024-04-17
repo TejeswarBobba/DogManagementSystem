@@ -4,6 +4,7 @@ COPY pom.xml mvnw ./
 COPY .mvn .mvn
 
 COPY src src
+RUN ./mvnw package
 
 FROM openjdk:17-jdk-slim
 WORKDIR DogsManagementSystem
