@@ -6,6 +6,6 @@ COPY .mvn .mvn
 COPY src src
 
 FROM openjdk:17-jdk-slim
-WORKDIR demo
+WORKDIR DogsManagementSystem
 COPY --from=build target/*.jar DogsManagementSystem.jar
 ENTRYPOINT ["java", "-jar", "DogsManagementSystem.jar"]
