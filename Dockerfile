@@ -1,14 +1,13 @@
-# Use official OpenJDK 11 image as base
-FROM adoptopenjdk/openjdk11:alpine-jre
+FROM openjdk:17-jdk-slim AS build
 
-# Set the working directory inside the container
-WORKDIR /app
+COPY pom.xml mvnw ./
+COPY .mvn .mvn
+RUN ./mvnw dependency:resolve
 
-# Copy the packaged Spring Boot application JAR file into the container
-COPY target/DogsManagementSystem-0.0.1-SNAPSHOT.jar /app/DogsManagementSystem.jar
+COPY src src
+RUN ./mvnw package
 
-# Expose the port that the Spring Boot application will run on
-EXPOSE 8080
-
-# Command to run the Spring Boot application when the container starts
-CMD ["java", "-jar", "DogsManagementSystem.jar"]
+FROM openjdk:17-jdk-slim
+WORKDIR demo
+COPY --from=build target/*.jar DogsManagementSystem.jar
+ENTRYPOINT ["java", "-jar", "DogsManagementSystem.jar"]
